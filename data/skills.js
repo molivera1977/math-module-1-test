@@ -1,0 +1,62 @@
+/* ═══════════════════════════════════════════════════════
+   SKILL TAGS — what each question is testing.
+   Saved with every missed question so the teacher
+   dashboard can rank skills (Focus next / Strongest) and
+   roll them up to 4.NBT.1–3. Names match the SBAC Place
+   Value FIAB review so the two read the same way.
+═══════════════════════════════════════════════════════ */
+window.SKILLS = {
+  A01: "x10 relationship",
+  A02: "Rounding",
+  A03: "Word form",
+  A04: "x10 relationship",
+  A05: "Comparing numbers",
+  A06: "Reasoning about rounding",
+  A07: "Regrouped place value",
+  A08: "Comparing numbers",
+  A09: "Expanded form",
+  A10: "Rounding",
+  A11: "Regrouped place value",
+  A12: "Expanded form",
+  A13: "Building numbers from digits",
+  A14: "Building numbers from digits",
+  A15: "x10 relationship",
+  A16: "Ordering numbers",
+  A17: "Comparing numbers",
+
+  B01: "x10 relationship",
+  B02: "Rounding",
+  B03: "Word form",
+  B04: "x10 relationship",
+  B05: "Comparing numbers",
+  B06: "Reasoning about rounding",
+  B07: "Regrouped place value",
+  B08: "Expanded form",
+  B09: "Comparing numbers",
+  B10: "Comparing numbers",
+  B11: "Rounding",
+  B12: "Regrouped place value",
+  B13: "Expanded form",
+  B14: "Building numbers from digits",
+  B15: "Building numbers from digits",
+  B16: "x10 relationship",
+  B17: "Ordering numbers",
+
+  C01: "x10 relationship",
+  C02: "Rounding",
+  C03: "Rounding",
+  C04: "Rounding",
+  C05: "Rounding",
+  C06: "Expanded form",
+  C07: "Expanded form",
+  C08: "Regrouped place value",
+  C09: "Comparing numbers",
+  C10: "Reasoning about rounding",
+  C11: "Expanded form",
+  C12: "Regrouped place value",
+  C13: "Word form",
+  C14: "Expanded form",
+  C15: "Regrouped place value",
+  C16: "Ordering numbers",
+  C17: "Value of a digit",
+};
