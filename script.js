@@ -10,7 +10,7 @@
 ═══════════════════════════════════════════════════════ */
 
 /* ── CONFIG ─────────────────────────────────────────── */
-const TEST_OPEN     = false;   // false = students locked out; only Teacher Access works. Set true to open.
+const TEST_OPEN     = true;    // false = students locked out; only Teacher Access works. Set true to open.
 const INSTRUCT_SECS = 20;
 const READ_SECS     = 12;
 const NEXT_SECS     = 8;
