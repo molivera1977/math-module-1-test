@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Math Module 1 Test: Place Value &amp; Whole Numbers</title>
-  <link rel="stylesheet" href="style.css?v=t2" />
+  <link rel="stylesheet" href="style.css?v=t3" />
 </head>
 <body>
 <canvas id="confetti-canvas"></canvas>
@@ -83,7 +83,7 @@
         <div class="step-card" id="test-start-card">
           <span class="step-label">Step 2 — Take the Test</span>
           <div class="start-grid">
-            <button class="start-btn" id="btn-form-A" onclick="app.attemptStart('A')">📝 Start the Test<span class="form-btn-sub">17 questions</span></button>
+            <button class="start-btn" id="btn-form-A" onclick="app.attemptStart('A')">📝 Start the Test<span class="form-btn-sub">20 questions</span></button>
           </div>
         </div>
 
@@ -101,8 +101,8 @@
         <div class="step-card hidden" id="retake-card">
           <span class="step-label">Retake — Choose a Form</span>
           <div class="start-grid">
-            <button class="start-btn" id="btn-form-B" onclick="app.startRetake('B')">🔁 Retake Form B<span class="form-btn-sub">17 questions</span></button>
-            <button class="start-btn" id="btn-form-C" onclick="app.startRetake('C')">🔁 Retake Form C<span class="form-btn-sub">17 questions</span></button>
+            <button class="start-btn" id="btn-form-B" onclick="app.startRetake('B')">🔁 Retake Form B<span class="form-btn-sub">20 questions</span></button>
+            <button class="start-btn" id="btn-form-C" onclick="app.startRetake('C')">🔁 Retake Form C<span class="form-btn-sub">20 questions</span></button>
           </div>
         </div>
 
@@ -175,7 +175,7 @@
         <button class="speak-btn" onclick="speakDir(this)">🔊</button>
         <h3 style="margin:0;">📝 Step 2 — Take the Test</h3>
       </div>
-      <p class="dir-text">Tap Start the Test. The test has 17 questions. After each answer you will see if it is correct or not quite, but the right answer is not shown.</p>
+      <p class="dir-text">Tap Start the Test. The test has 20 questions. After each answer you will see if it is correct or not quite, but the right answer is not shown.</p>
     </div>
 
     <div class="dir-section attempts-dir">
@@ -191,7 +191,7 @@
         <button class="speak-btn" onclick="speakDir(this)">🔊</button>
         <h3 style="margin:0;">✏️ Part 2 — Written</h3>
       </div>
-      <p class="dir-text">After the 17 multiple choice questions, you will answer 2 written questions. Type your answer and explain your thinking in complete sentences. Each answer needs at least 10 words.</p>
+      <p class="dir-text">After the 20 multiple choice questions, you will answer 2 written questions. Type your answer and explain your thinking in complete sentences. Each answer needs at least 10 words.</p>
     </div>
 
     <div class="dir-section read-dir">
@@ -247,7 +247,7 @@
       <button onclick="app.exitReviewMode()" style="background:none;border:1px solid #ffc107;border-radius:6px;padding:3px 10px;cursor:pointer;font-family:inherit;font-weight:bold;color:#856404;font-size:0.78rem;">✕ Exit</button>
     </div>
     <div class="q-badge">
-      <span class="q-badge-pill" id="progress-text">Question 1 of 17</span>
+      <span class="q-badge-pill" id="progress-text">Question 1 of 20</span>
       <span class="score-badge" id="score-text">Score: 0</span>
     </div>
 
@@ -389,11 +389,11 @@
 
 </div><!-- /.container -->
 
-<script src="data/form_a.js?v=t2"></script>
-<script src="data/form_b.js?v=t2"></script>
-<script src="data/form_c.js?v=t2"></script>
-<script src="data/skills.js?v=t2"></script>
-<script src="data/written.js?v=t2"></script>
-<script src="script.js?v=t2"></script>
+<script src="data/form_a.js?v=t3"></script>
+<script src="data/form_b.js?v=t3"></script>
+<script src="data/form_c.js?v=t3"></script>
+<script src="data/skills.js?v=t3"></script>
+<script src="data/written.js?v=t3"></script>
+<script src="script.js?v=t3"></script>
 </body>
 </html>

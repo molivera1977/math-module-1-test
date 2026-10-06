@@ -385,7 +385,7 @@ function applyFormLocks(name) {
     if (detail) detail.textContent = `You have already taken: ${taken.join(', ')}.`;
     ['B','C'].forEach(f => {
       const sub = document.querySelector(`#btn-form-${f} .form-btn-sub`);
-      if (sub) sub.textContent = a[f] ? `Taken ${a[f]}× before · 17 questions` : '17 questions';
+      if (sub) sub.textContent = a[f] ? `Taken ${a[f]}× before · 20 questions` : '20 questions';
     });
   }
 }

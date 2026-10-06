@@ -59,4 +59,15 @@ window.SKILLS = {
   C15: "Regrouped place value",
   C16: "Ordering numbers",
   C17: "Value of a digit",
+
+  // Added to the test 10/5 (rounding, x10, expanded form)
+  A18: "Rounding",
+  A19: "x10 relationship",
+  A20: "Expanded form",
+  B18: "Rounding",
+  B19: "x10 relationship",
+  B20: "Expanded form",
+  C18: "Rounding",
+  C19: "x10 relationship",
+  C20: "Expanded form",
 };
