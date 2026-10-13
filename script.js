@@ -11,6 +11,7 @@
 
 /* ── CONFIG ─────────────────────────────────────────── */
 const TEST_OPEN     = true;    // false = students locked out; only Teacher Access works. Set true to open.
+const SHARE_MODE    = !!window.SHARE_MODE;   // set by share.js — a visitor's link, never a student's
 const INSTRUCT_SECS = 20;
 const READ_SECS     = 12;
 const NEXT_SECS     = 8;
@@ -373,6 +374,12 @@ function testCompleted(name) {
 }
 
 function applyFormLocks(name) {
+  if (SHARE_MODE) {   // shared preview: Form A, B and C all open, as many times as they like
+    ['test-start-card', 'retake-card'].forEach(id => { const el = document.getElementById(id); if (el) el.classList.remove('hidden'); });
+    const doneCard = document.getElementById('completed-container');
+    if (doneCard) doneCard.classList.add('hidden');
+    return;
+  }
   const done      = testCompleted(name);
   const startCard = document.getElementById('test-start-card');
   const doneCard  = document.getElementById('completed-container');
@@ -611,7 +618,7 @@ const app = {
 
   /* ── READ ALOUD INTRO ── */
   showReadAloudIntro() {
-    if (!TEST_OPEN) return;
+    if (!TEST_OPEN && !SHARE_MODE) return;
     document.getElementById('welcome-panel').classList.add('hidden');
     this.show('readaloud-screen');
     setTimeout(speakReadAloudIntro, 150);   // announces itself (show() just cancelled any speech)
@@ -657,6 +664,18 @@ const app = {
     this.show('start-screen');
     document.getElementById('welcome-panel').classList.add('hidden');
     document.getElementById('student-login-panel').classList.remove('hidden');
+    if (SHARE_MODE) this._shareSignIn();
+  },
+
+  /* Shared preview: no roster, no student number — straight to the forms. */
+  _shareSignIn() {
+    loggedInName     = 'Visitor';
+    this.studentName = 'Visitor';
+    const loginCard = document.getElementById('login-step-card');
+    if (loginCard) loginCard.classList.add('hidden');
+    document.getElementById('form-select-section').classList.remove('hidden');
+    applyFormLocks(this.studentName);
+    this.checkResume();
   },
 
   /* ── NAME SELECT ── */
@@ -727,6 +746,7 @@ const app = {
   /* ── ATTEMPT START ── */
   attemptStart(form) {
     if (!this.studentName || form !== 'A') return;
+    if (SHARE_MODE) { this.startSession('A'); return; }
     if (testCompleted(this.studentName)) { applyFormLocks(this.studentName); return; }
     this.startSession('A');
   },
@@ -742,6 +762,7 @@ const app = {
   },
 
   startRetake(form) {
+    if (SHARE_MODE && this.studentName && (form === 'B' || form === 'C')) { this.startSession(form); return; }
     if (!this.studentName || !retakeUnlocked || (form !== 'B' && form !== 'C')) return;
     retakeUnlocked = false;            // one PIN = one retake
     this.startSession(form);
@@ -1256,11 +1277,11 @@ const app = {
     const date  = new Date();
 
     const scores   = JSON.parse(localStorage.getItem(SCORES_KEY) || '[]');
-    const prevDone = reviewMode ? 0 : scores.filter(s => s.name === this.studentName && s.form === this.currentForm && s.done).length;
+    const prevDone = (reviewMode || SHARE_MODE) ? 0 : scores.filter(s => s.name === this.studentName && s.form === this.currentForm && s.done).length;
     const attemptNum = prevDone + 1;
     this.currentAttemptNum = attemptNum;
 
-    if (!reviewMode) {
+    if (!reviewMode && !SHARE_MODE) {
       scores.push({
         name:    this.studentName,
         form:    this.currentForm,
@@ -1290,8 +1311,9 @@ const app = {
     const reviewNextBtn = document.getElementById('review-next-btn');
     if (reviewNextBtn) reviewNextBtn.classList.toggle('hidden', !reviewMode);
 
-    document.getElementById('final-score-sub').textContent =
-      `${formLabel()}${attemptNum > 1 ? ' · Attempt ' + attemptNum : ''} · ${this.studentName}`;
+    document.getElementById('final-score-sub').textContent = SHARE_MODE
+      ? `${formLabel()} · Shared preview — this score was not saved`
+      : `${formLabel()}${attemptNum > 1 ? ' · Attempt ' + attemptNum : ''} · ${this.studentName}`;
     document.getElementById('final-msg').textContent = msg;
 
     const pctEl = document.getElementById('final-percent');
@@ -1306,7 +1328,8 @@ const app = {
           `<div class="missed-item">
             <div class="mi-label">${m.id}</div>
             <div style="margin:3px 0;">${formatMathText(m.q)}</div>
-            <div>Your answer: <span style="color:var(--danger);">${formatMathText(m.yourAnswer)}</span></div>
+            <div>Your answer: <span style="color:var(--danger);">${formatMathText(m.yourAnswer)}</span>${SHARE_MODE ? ` &nbsp; ✅ Correct: <strong style="color:var(--correct);">${formatMathText(m.correct)}</strong>` : ''}</div>
+            ${SHARE_MODE && m.explanation ? `<div style="margin-top:5px;font-size:0.85rem;color:#555;font-style:italic;">💡 ${formatMathText(m.explanation)}</div>` : ''}
           </div>`
         ).join('');
     } else {
@@ -1319,7 +1342,7 @@ const app = {
       name:      this.studentName,
       form:      this.currentForm,
       sessionId: SESSION_ID + '-' + this.currentForm + '-A' + attemptNum + '-written',
-      preview:   reviewMode
+      preview:   reviewMode || SHARE_MODE   // shared preview: written answers are not required and not sent
     });
 
   },
@@ -1811,7 +1834,7 @@ app.init();
 
 /* ── CLOSED-TO-STUDENTS LOCK ────────────────────────── */
 (function applyReviewLock() {
-  if (TEST_OPEN) return;
+  if (TEST_OPEN || SHARE_MODE) return;
   const btn = document.querySelector('.lgs-btn');
   if (!btn) return;
   btn.disabled = true;
