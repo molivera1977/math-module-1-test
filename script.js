@@ -12,7 +12,7 @@
 /* ── CONFIG ─────────────────────────────────────────── */
 const TEST_OPEN     = true;    // false = students locked out; only Teacher Access works. Set true to open.
 const SHARE_MODE    = !!window.SHARE_MODE;   // set by share.js — a visitor's link, never a student's
-const INSTRUCT_SECS = 20;
+const INSTRUCT_SECS = 15;
 const READ_SECS     = 12;
 const NEXT_SECS     = 8;
 const STORAGE_KEY   = 'mod1t_session_v1';
@@ -1012,7 +1012,7 @@ const app = {
     if (el) el.textContent = `${m}:${s}`;
   },
 
-  /* ── INSTRUCTIONS LOCK (20s) ── */
+  /* ── INSTRUCTIONS LOCK (15s) ── */
   startInstructionsTimer() {
     if (this.instructInterval) { clearInterval(this.instructInterval); this.instructInterval = null; }
     const btn   = document.getElementById('ready-btn');
