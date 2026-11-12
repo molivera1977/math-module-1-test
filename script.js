@@ -826,8 +826,13 @@ const app = {
       retakeUnlocked = false;   // a PIN unlock never carries over to the next student
       applyFormLocks(displayName);
       this.checkResume();
-      const pending = readJSON(WRITTEN_PENDING_KEY);
-      if (pending && pending.name === displayName) { this._endPct = null; this._startWritten(pending); }
+      // Part 2 still to write: on THIS computer, or (spot-sync.js, Marcos 11/12) on another one — looked at once the
+      // sheet has answered, so a student at home is sent straight back to Part 2 too
+      const goOn = () => {
+        const pending = readJSON(WRITTEN_PENDING_KEY);
+        if (this.studentName === displayName && pending && pending.name === displayName) { this._endPct = null; this._startWritten(pending); }
+      };
+      if (window.SpotSync) SpotSync.signIn(displayName).then(goOn); else goOn();
     }
   },
 
@@ -1967,5 +1972,8 @@ if (window.SpotSync) SpotSync.init({
   site: 'math-module-1-test', key: STORAGE_KEY, url: SHEET_URL, app,
   who: () => loggedInName,
   skip: () => SHARE_MODE || reviewMode,
-  usable: s => Array.isArray(s.currentBank) && s.currentBank.length > 0
+  usable: s => Array.isArray(s.currentBank) && s.currentBank.length > 0,
+  // finished parts follow the student too (Marcos 11/12: "Make finished parts and unlocks follow kids across computers next?" → "Yes, build it")
+  records: [{ key: SCORES_KEY }, { key: WRITTEN_PENDING_KEY, kind: 'slot' }],   // + Part 2 still to write
+  refresh: name => applyFormLocks(name)
 });
