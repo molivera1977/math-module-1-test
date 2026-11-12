@@ -707,6 +707,7 @@ const app = {
   /* ── READ ALOUD INTRO ── */
   showReadAloudIntro() {
     if (!TEST_OPEN && !SHARE_MODE) return;
+    if (schoolStop()) return;   // tests are taken at school (school-clock.js)
     document.getElementById('welcome-panel').classList.add('hidden');
     this.show('readaloud-screen');
     introTimer = setTimeout(speakReadAloudIntro, 150);   // announces itself (show() just cancelled any speech; leaving first cancels this)
@@ -816,6 +817,7 @@ const app = {
     }
 
     if (matched) {
+      if (schoolShut()) { errEl.textContent = '🏫 ' + SCHOOL_NOTE; applySchoolLock(); return; }   // at school only
       loggedInName     = displayName;
       this.studentName = displayName;
       document.getElementById('student-pin').value = '';
@@ -839,6 +841,7 @@ const app = {
   /* ── ATTEMPT START ── */
   attemptStart(form) {
     if (!this.studentName || form !== 'A') return;
+    if (schoolStop()) return;
     if (SHARE_MODE) { this.startSession('A'); return; }
     if (testCompleted(this.studentName)) { applyFormLocks(this.studentName); return; }
     this.startSession('A');
@@ -966,6 +969,7 @@ const app = {
   },
 
   resumeSession() {
+    if (schoolStop()) return;   // a test started at school is finished at school
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
     if (!saved) return;
     this.studentName    = saved.studentName;
@@ -1977,3 +1981,43 @@ if (window.SpotSync) SpotSync.init({
   records: [{ key: SCORES_KEY }, { key: WRITTEN_PENDING_KEY, kind: 'slot' }],   // + Part 2 still to write
   refresh: name => applyFormLocks(name)
 });
+
+/* ── TESTS ARE TAKEN AT SCHOOL (Marcos 11/12/2026: "allow the kids to do the reviews only and make all of those [tests]
+   off limits" at home → "I like your time idea") ──
+   school-clock.js (the same file on every test site) says whether it is the school day: Monday–Friday, 8:40 AM–3:10 PM
+   (12:50 PM on early-dismissal days), by the clock of the site's own address, not the computer's. Outside it the welcome
+   button reads "🏫 At School Only", sign-in stops with a note, and a test started at school waits for the next school day
+   (Resume and Begin go back to the welcome screen). A test already on the screen at 3:10 goes on. The guest view
+   (?share=), Try it and Teacher Access are never shut. */
+const SCHOOL_NOTE = 'You take this test at school. It opens on school days from 8:40 to 3:10.';
+function schoolShut() { return !SHARE_MODE && !!window.SchoolClock && !SchoolClock.atSchool(); }
+function applySchoolLock() {
+  if (!TEST_OPEN || SHARE_MODE) return;   // shut by the switch: the "Not Open Yet" lock above
+  const btn = document.querySelector('.lgs-btn');
+  if (!btn) return;
+  if (!btn.dataset.openText) btn.dataset.openText = btn.textContent;
+  const shut = schoolShut();
+  btn.disabled = shut;
+  btn.classList.toggle('locked', shut);
+  btn.textContent = shut ? '🏫 At School Only' : btn.dataset.openText;
+  let note = document.getElementById('school-note');
+  if (shut && !note) {
+    note = document.createElement('p');
+    note.id = 'school-note';
+    note.className = 'locked-note';
+    note.textContent = SCHOOL_NOTE;
+    btn.insertAdjacentElement('afterend', note);
+  } else if (!shut && note) note.remove();
+}
+// Shut right now → back to the welcome screen, locked, and true; open → false
+function schoolStop() {
+  if (!schoolShut()) return false;
+  app.show('start-screen');
+  document.getElementById('welcome-panel').classList.remove('hidden');
+  document.getElementById('student-login-panel').classList.add('hidden');
+  applySchoolLock();
+  return true;
+}
+applySchoolLock();
+if (window.SchoolClock) SchoolClock.whenKnown(applySchoolLock);
+setInterval(applySchoolLock, 30000);
